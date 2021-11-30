@@ -1,24 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { ReactElement, useState } from 'react';
+import 'semantic-ui-css/semantic.css';
+import BookDetails from './components/BookDetails';
+import BookList from './components/BookList';
+import Book from './types/Book';
 
-function App() {
+function App(): ReactElement {
+  const [book, setBook] = useState<Book>();
+
+  const onShowDetails = (book: Book) => {
+    setBook(book);
+  };
+
+  const onShowList = () => {
+    setBook(undefined);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='ui container'>
+      {book ? (
+        <BookDetails isbn={book.isbn} onShowList={onShowList}/>
+      ) : (
+        <BookList onShowDetails={onShowDetails} />
+      )}
     </div>
   );
 }
