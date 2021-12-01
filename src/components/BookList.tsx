@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import React, { ReactElement, useEffect, useState } from 'react';
+import { useBookApi } from '../hooks/UseBookApi';
+import { bookApi } from '../shared/BookApi';
 import Book from '../types/Book';
 import BookListItem from './BookListItem';
 import LoadingSpinner from './LoadingSpinner';
@@ -9,23 +11,14 @@ interface Props {
 }
 
 export default function BookList(props: Props): ReactElement {
-  const [books, setBooks] = useState<Book[]>();
-
-  const fetchBooks = () => {
-    axios
-      .get('https://api3.angular-buch.com/books')
-      .then((res: AxiosResponse<Book[]>) => setBooks(res.data));
-  };
-
-  useEffect(fetchBooks, []);
+  const [books, setBooks] = useBookApi<Book[]>();
 
   if (!books) {
     return <LoadingSpinner />;
   }
 
-  
   const resetList = () => {
-    axios.delete(`https://api3.angular-buch.com/books`).then(fetchBooks);
+    bookApi('DELETE', 'books', () => bookApi('GET', 'books', setBooks));
   };
 
   if (books.length == 0) {

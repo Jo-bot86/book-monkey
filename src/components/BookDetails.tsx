@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useBookApi } from '../hooks/UseBookApi';
+import { bookApi } from '../shared/BookApi';
 import Book from '../types/Book';
 import LoadingSpinner from './LoadingSpinner';
 
@@ -11,21 +13,15 @@ interface Props {
 export default function BookDetails(props: Props) {
   const { isbn } = props;
 
-  const [book, setBook] = useState<Book>();
-
-  const handleDelete = () => {
-    axios.delete(`https://api3.angular-buch.com/book/${isbn}`).then(props.onShowList)
-  };
-
-  useEffect(() => {
-    axios
-      .get(`https://api3.angular-buch.com/book/${isbn}`)
-      .then((res: AxiosResponse<Book>) => setBook(res.data));
-  }, [isbn]);
-
+  const [book] = useBookApi<Book>(isbn);
+  
   if (!book) {
     return <LoadingSpinner />;
   }
+
+  const handleDelete = () => {
+    bookApi('DELETE', `book/${isbn}`, props.onShowList);
+  };
 
   const getRatings = (): number[] => {
     return Array.from(Array(book.rating || 0).keys());
