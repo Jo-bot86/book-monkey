@@ -1,15 +1,21 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import Book from '../types/Book';
 
 interface Props {
   book: Book;
-  onShowDetails: (book: Book) => void;
 }
 
 export default function BookListItem(props: Props) {
+  const history = useHistory();
   const { book } = props;
+
+  const handleShowDetail = () => {
+    history.push(`/books/${book.isbn}`)
+  }
+
   return (
-    <div className='item' onClick={() => props.onShowDetails(book)}>
+    <div className='item' onClick={handleShowDetail}>
       {book.thumbnails ? (
         book.thumbnails.length > 0 ? (
           <img className='ui tiny image' alt='' src={book.thumbnails[0].url} />

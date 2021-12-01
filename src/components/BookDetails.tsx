@@ -1,27 +1,27 @@
 import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { useBookApi } from '../hooks/UseBookApi';
 import { bookApi } from '../shared/BookApi';
 import Book from '../types/Book';
 import LoadingSpinner from './LoadingSpinner';
 
-interface Props {
-  isbn: string;
-  onShowList: () => void;
-}
-
-export default function BookDetails(props: Props) {
-  const { isbn } = props;
-
+export default function BookDetails() {
+  const { isbn } = useParams<{ isbn: string }>();
   const [book] = useBookApi<Book>(isbn);
-  
+  const history = useHistory();
+
   if (!book) {
     return <LoadingSpinner />;
   }
 
   const handleDelete = () => {
-    bookApi('DELETE', `book/${isbn}`, props.onShowList);
-  };
+    bookApi('DELETE', `book/${isbn}`, onShowList);
+  }; 
+
+  const onShowList = () => {
+    history.push('/books');
+  }
 
   const getRatings = (): number[] => {
     return Array.from(Array(book.rating || 0).keys());
@@ -60,12 +60,8 @@ export default function BookDetails(props: Props) {
           )}
         </div>
       </div>
-      <button className='ui button' onClick={props.onShowList}>
-        Zrück
-      </button>
-      <button className='ui button' onClick={handleDelete}>
-        Löschen
-      </button>
+      <button className='ui button' onClick={onShowList}>Zrück</button>
+      <button className='ui button' onClick={handleDelete}>Löschen</button>
     </>
   );
 }

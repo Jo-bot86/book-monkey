@@ -1,28 +1,16 @@
 import React, { ReactElement, useState } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import 'semantic-ui-css/semantic.css';
-import BookDetails from './components/BookDetails';
-import BookList from './components/BookList';
-import Book from './types/Book';
+import Layout from './components/Layout';
+import Routes from './components/Routes';
 
 function App(): ReactElement {
-  const [book, setBook] = useState<Book>();
-
-  const onShowDetails = (book: Book) => {
-    setBook(book);
-  };
-
-  const onShowList = () => {
-    setBook(undefined);
-  }
-
   return (
-    <div className='ui container'>
-      {book ? (
-        <BookDetails isbn={book.isbn} onShowList={onShowList}/>
-      ) : (
-        <BookList onShowDetails={onShowDetails} />
-      )}
-    </div>
+    <Router>
+      <Layout>
+        <Routes />
+      </Layout>
+    </Router>
   );
 }
 

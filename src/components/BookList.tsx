@@ -6,11 +6,9 @@ import Book from '../types/Book';
 import BookListItem from './BookListItem';
 import LoadingSpinner from './LoadingSpinner';
 
-interface Props {
-  onShowDetails: (book: Book) => void;
-}
 
-export default function BookList(props: Props): ReactElement {
+
+export default function BookList(): ReactElement {
   const [books, setBooks] = useBookApi<Book[]>();
 
   if (!books) {
@@ -38,7 +36,6 @@ export default function BookList(props: Props): ReactElement {
         <BookListItem
           key={book.isbn}
           book={book}
-          onShowDetails={() => props.onShowDetails(book)}
         />
       ))}
     </div>
