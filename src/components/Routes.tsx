@@ -1,7 +1,8 @@
 import React from 'react'
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import BookDetails from './BookDetails';
 import BookList from './BookList';
+import Home from './Home';
 
 export default function Routes() {
   return (
@@ -12,8 +13,11 @@ export default function Routes() {
       <Route exact path='/books'>
         <BookList />
       </Route>
+      <Route path='/home'>
+        <Home />
+      </Route>
       <Route path='/'>
-        <h1 className='ui center aligned segment'>Willkommen bei BookMonkey</h1>
+        <Redirect to='/home' />
       </Route>
     </Switch>
   );

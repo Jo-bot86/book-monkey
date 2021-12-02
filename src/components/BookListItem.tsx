@@ -11,7 +11,7 @@ export default function BookListItem(props: Props) {
   const { book } = props;
 
   const handleShowDetail = () => {
-    history.push(`/books/${book.isbn}`)
+    history.push(`/books/${book.isbn}`);
   }
 
   return (
