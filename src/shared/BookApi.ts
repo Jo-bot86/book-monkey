@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, Method } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 import Book from '../types/Book';
 
 const BASE_URL = 'https://api3.angular-buch.com';
