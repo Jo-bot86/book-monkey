@@ -1,15 +1,19 @@
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom';
 import BookDetails from './BookDetails';
-import BookForm from './BookForm';
 import BookList from './BookList';
+import CreateBook from './BookCreate';
+import EditBook from './BookEdit';
 import Home from './Home';
 
 export default function Routes() {
   return (
     <Switch>
       <Route path='/books/new'>
-        <BookForm />
+        <CreateBook />
+      </Route>
+      <Route path='/books/:isbn/edit'>
+        <EditBook />
       </Route>
       <Route path='/books/:isbn'>
         <BookDetails />

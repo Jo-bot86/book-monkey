@@ -1,15 +1,28 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { bookApi } from '../shared/BookApi';
+import { Thumbnail } from '../types/Book';
 
-export default function BookForm() {
-  const [title, setTitle] = useState('');
-  const [subtitle, setSubtitle] = useState('');
-  const [isbn, setIsbn] = useState('');
-  const [published, setPublished] = useState(((new Date()).toISOString()).slice(0,10));
-  const [authors, setAuthors] = useState(['']);
-  const [thumbnails, setThumbnails] = useState([{ title: '', url: '' }]);
-  const [description, setDescription] = useState('');
+interface Props {
+  isbn: string;
+  title: string;
+  authors: string[];
+  published: string;
+  subtitle: string;
+  thumbnails: Thumbnail[];
+  description: string;
+  isEdit: boolean
+}
+
+export default function BookForm(props: Props) {
+  const [title, setTitle] = useState(props.title);
+  const [subtitle, setSubtitle] = useState(props.subtitle);
+  const [isbn, setIsbn] = useState(props.isbn);
+  const [published, setPublished] = useState(props.published);
+  const [authors, setAuthors] = useState(props.authors);
+  const [thumbnails, setThumbnails] = useState(props.thumbnails);
+  const [description, setDescription] = useState(props.description);
+  const [isEdit, setIsEdit] = useState(props.isEdit);
   const history = useHistory();
 
   const createBook = () => ({
@@ -17,7 +30,7 @@ export default function BookForm() {
     subtitle: '',
     isbn: '',
     authors: [''],
-    published: new Date,
+    published: new Date(),
     description: '',
     thumbnails: [{}],
   });
@@ -29,12 +42,12 @@ export default function BookForm() {
     newBook.subtitle = subtitle;
     newBook.isbn = isbn;
     newBook.authors = authors;
-    newBook.published = new Date(published)
+    newBook.published = new Date(published);
     newBook.description = description;
     newBook.thumbnails = thumbnails;
-    console.log(newBook)
-    bookApi('POST','books', onShowList,newBook)
-    
+    isEdit
+      ? bookApi('PUT', `books/${isbn}`, () => history.push(`/books/${isbn}`), newBook)
+      : bookApi('POST', 'books', onShowList, newBook);
   };
 
   const onShowList = () => {
@@ -52,9 +65,11 @@ export default function BookForm() {
     index: number,
     key: string
   ) => {
-    const newThumbnails = [...thumbnails];
-    newThumbnails[index] = { ...newThumbnails[index], [key]: e.target.value };
-    setThumbnails(newThumbnails);
+    setThumbnails((currThumbnails) => {
+      const newThumbnails = [...currThumbnails];
+      newThumbnails[index] = { ...newThumbnails[index], [key]: e.target.value };
+      return newThumbnails;
+    });
   };
 
   const handlePublished = (e: ChangeEvent<HTMLInputElement>) => {
@@ -122,7 +137,7 @@ export default function BookForm() {
         id='published'
         required
         onChange={(e) => handlePublished(e)}
-        value = {published}
+        value={published}
       />
 
       <label>Authoren</label>
@@ -185,7 +200,7 @@ export default function BookForm() {
           </button>
         </div>
       ))}
-
+      <br />
       <button className='ui button'>Submit</button>
     </form>
   );

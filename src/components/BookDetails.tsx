@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { useBookApi } from '../hooks/UseBookApi';
 import { bookApi } from '../shared/BookApi';
 import Book from '../types/Book';
@@ -26,6 +26,10 @@ export default function BookDetails() {
   const getRatings = (): number[] => {
     return Array.from(Array(book.rating || 0).keys());
   };
+
+  const onEditForm = () => {
+    history.push(`/books/${isbn}/edit`)
+  }
 
   return (
     <>
@@ -60,8 +64,9 @@ export default function BookDetails() {
           )}
         </div>
       </div>
-      <button className='ui button' onClick={onShowList}>Zrück</button>
-      <button className='ui button' onClick={handleDelete}>Löschen</button>
+      <button className='ui yellow button' onClick={onEditForm}>Bearbeiten</button>
+      <button className='ui green button' onClick={onShowList}>Zurück</button>
+      <button className='ui red button' onClick={handleDelete}>Löschen</button>
     </>
   );
 }
