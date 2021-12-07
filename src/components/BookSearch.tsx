@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { useBookApi } from '../hooks/UseBookApi';
 import { bookApi } from '../shared/BookApi';
 import Book from '../types/Book';
@@ -9,22 +9,28 @@ export default function BookSearch() {
   const [searchTerm, setSearchTerm] = useState('');
   const [books, setBooks] = useState<Book[]>();
   const [visible, setVisible] = useState(false);
-  console.log(books);
+  const history = useHistory();
+
   useEffect(() => {
     searchTerm.length > 0 &&
       bookApi('GET', `books/search/${searchTerm}`, setBooks);
   }, [searchTerm]);
 
-  const onHideResults = () => {
+  const onHideResults = (e: React.MouseEvent<HTMLElement>, index: number) => {
     setVisible(false);
     setSearchTerm('');
     setBooks([]);
+    history.push(`/books/${books && books[index].isbn}`);
   };
 
-  const onShowResults = () => {
-    setVisible(true);
+  const onShowResults = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    e.target.value.length > 0 && setVisible(true);
   };
 
+  const handleOnBlur= () => {
+    setVisible(false);
+  };
 
   return (
     <div className='ui search'>
@@ -33,19 +39,19 @@ export default function BookSearch() {
           type='text'
           className='prompt'
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onFocus={onShowResults}
+          onChange={onShowResults}
+          onBlur={handleOnBlur}
         />
         <i className='search icon' />
       </div>
-      <div className={`results transition ${visible && 'visible'}`}>
+      <div className={`results transition ${visible ? 'visible' : ''}`}>
         {books &&
           books.map((book, index) => (
             <Link
               key={index}
               className='result'
-              onClick={onHideResults}
-              to={`/books/${book.isbn}`}
+              onMouseDown={(e) => onHideResults(e, index)}
+              to=''
             >
               {book.title}
               <p className='description'>{book.subtitle}</p>

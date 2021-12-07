@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { useHistory } from 'react-router-dom';
 import Book from '../types/Book';
 
 interface Props {
   book: Book;
+  children?: ReactElement;
 }
 
 export default function BookListItem(props: Props) {
@@ -12,7 +13,7 @@ export default function BookListItem(props: Props) {
 
   const handleShowDetail = () => {
     history.push(`/books/${book.isbn}`);
-  }
+  };
 
   return (
     <div className='item' onClick={handleShowDetail}>
@@ -42,6 +43,7 @@ export default function BookListItem(props: Props) {
           {book.isbn}
         </div>
       </div>
+      {props.children}
     </div>
   );
 }

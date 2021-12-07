@@ -1,12 +1,17 @@
 import axios, { AxiosResponse } from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { Dispatch, useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useBookApi } from '../hooks/UseBookApi';
 import { bookApi } from '../shared/BookApi';
+import { Action } from '../Store';
 import Book from '../types/Book';
 import LoadingSpinner from './LoadingSpinner';
 
-export default function BookDetails() {
+interface Props {
+  dispatch: Dispatch<Action>;
+}
+
+export default function BookDetails(props: Props) {
   const { isbn } = useParams<{ isbn: string }>();
   const [book] = useBookApi<Book>(isbn);
   const history = useHistory();
@@ -17,19 +22,26 @@ export default function BookDetails() {
 
   const handleDelete = () => {
     bookApi('DELETE', `book/${isbn}`, onShowList);
-  }; 
+  };
 
   const onShowList = () => {
     history.push('/books');
-  }
+  };
 
   const getRatings = (): number[] => {
     return Array.from(Array(book.rating || 0).keys());
   };
 
   const onEditForm = () => {
-    history.push(`/books/${isbn}/edit`)
-  }
+    history.push(`/books/${isbn}/edit`);
+  };
+
+  const addToCart = () => {
+    props.dispatch({
+      type: 'ADD_TO_CART',
+      book,
+    });
+  };
 
   return (
     <>
@@ -64,9 +76,18 @@ export default function BookDetails() {
           )}
         </div>
       </div>
-      <button className='ui yellow button' onClick={onEditForm}>Bearbeiten</button>
-      <button className='ui green button' onClick={onShowList}>Zurück</button>
-      <button className='ui red button' onClick={handleDelete}>Löschen</button>
+      <button className='ui yellow button' onClick={onEditForm}>
+        Bearbeiten
+      </button>
+      <button className='ui green button' onClick={onShowList}>
+        Zurück
+      </button>
+      <button className='ui red button' onClick={handleDelete}>
+        Löschen
+      </button>
+      <button className='ui button' onClick={addToCart}>
+        <i className='fas fa-shopping-cart'></i>
+      </button>
     </>
   );
 }
