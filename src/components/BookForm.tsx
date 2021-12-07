@@ -2,6 +2,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { bookApi } from '../shared/BookApi';
 import { Thumbnail } from '../types/Book';
+import css from './BookForm.module.css';
 
 interface Props {
   isbn: string;
@@ -11,7 +12,7 @@ interface Props {
   subtitle: string;
   thumbnails: Thumbnail[];
   description: string;
-  isEdit: boolean
+  isEdit: boolean;
 }
 
 export default function BookForm(props: Props) {
@@ -46,7 +47,12 @@ export default function BookForm(props: Props) {
     newBook.description = description;
     newBook.thumbnails = thumbnails;
     isEdit
-      ? bookApi('PUT', `books/${isbn}`, () => history.push(`/books/${isbn}`), newBook)
+      ? bookApi(
+        'PUT',
+        `books/${isbn}`,
+        () => history.push(`/books/${isbn}`),
+        newBook
+      )
       : bookApi('POST', 'books', onShowList, newBook);
   };
 
@@ -103,7 +109,10 @@ export default function BookForm(props: Props) {
   };
 
   return (
-    <form className='ui form' onSubmit={(e) => handleSubmit(e)}>
+    <form
+      className={`ui form ${css.bookForm}`}
+      onSubmit={(e) => handleSubmit(e)}
+    >
       <label htmlFor='title'>Buchtitel</label>
       <input
         placeholder='Titel'
@@ -111,6 +120,7 @@ export default function BookForm(props: Props) {
         onChange={(e) => setTitle(e.target.value)}
         value={title}
         required
+        minLength={2}
       />
 
       <label htmlFor='subtitle'>Untertitel</label>
@@ -128,6 +138,8 @@ export default function BookForm(props: Props) {
         onChange={(e) => setIsbn(e.target.value)}
         value={isbn}
         required
+        pattern='\d{10}|\d{13}'
+        title='Die Isbn ist eine 10 oder 13 stellige Zahl'
       />
 
       <label htmlFor='published'>Erscheinungsdatum</label>
