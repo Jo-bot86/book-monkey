@@ -1,15 +1,11 @@
-import React, { Dispatch } from 'react';
-import { Action, Store } from '../Store';
+import React from 'react';
+import { useStoreContext } from '../Store';
 import Book from '../types/Book';
 import BookListItem from './BookListItem';
 
-interface Props {
-  store: Store;
-  dispatch: Dispatch<Action>;
-}
 
-export default function Cart(props: Props) {
-  const { store, dispatch } = props;
+export default function Cart() {
+  const { store, dispatch } = useStoreContext();
 
   const addToCart = (e: React.MouseEvent, book: Book) => {
     dispatch({ type: 'ADD_TO_CART', book });

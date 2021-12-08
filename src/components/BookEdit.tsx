@@ -1,7 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
 import { useBookApi } from '../hooks/UseBookApi';
-import { bookApi } from '../shared/BookApi';
 import Book from '../types/Book';
 import BookForm from './BookForm';
 import LoadingSpinner from './LoadingSpinner';

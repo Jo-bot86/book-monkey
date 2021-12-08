@@ -1,5 +1,4 @@
-import axios, { AxiosResponse } from 'axios';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement } from 'react';
 import { useBookApi } from '../hooks/UseBookApi';
 import { bookApi } from '../shared/BookApi';
 import Book from '../types/Book';

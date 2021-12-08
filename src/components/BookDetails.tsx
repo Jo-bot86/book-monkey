@@ -1,20 +1,17 @@
-import axios, { AxiosResponse } from 'axios';
-import React, { Dispatch, useEffect, useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import React from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { useBookApi } from '../hooks/UseBookApi';
 import { bookApi } from '../shared/BookApi';
-import { Action } from '../Store';
+import { useStoreContext } from '../Store';
 import Book from '../types/Book';
 import LoadingSpinner from './LoadingSpinner';
 
-interface Props {
-  dispatch: Dispatch<Action>;
-}
 
-export default function BookDetails(props: Props) {
+export default function BookDetails() {
   const { isbn } = useParams<{ isbn: string }>();
   const [book] = useBookApi<Book>(isbn);
   const history = useHistory();
+  const {dispatch} = useStoreContext();
 
   if (!book) {
     return <LoadingSpinner />;
@@ -37,7 +34,7 @@ export default function BookDetails(props: Props) {
   };
 
   const addToCart = () => {
-    props.dispatch({
+    dispatch({
       type: 'ADD_TO_CART',
       book,
     });
